@@ -184,13 +184,12 @@ static zend_class_entry *register_class_SimpleCWS(void)
 
 	INIT_CLASS_ENTRY(ce, "SimpleCWS", class_SimpleCWS_methods);
 	class_entry = zend_register_internal_class_ex(&ce, NULL);
-	class_entry->ce_flags |= ZEND_ACC_FINAL;
+	class_entry->ce_flags |= ZEND_ACC_FINAL | ZEND_ACC_ALLOW_DYNAMIC_PROPERTIES;
 
-	zval property_handle_default_value;
-	ZVAL_NULL(&property_handle_default_value);
-	zend_string *property_handle_name = zend_string_init("handle", sizeof("handle") - 1, 1);
-	zend_declare_property_ex(class_entry, property_handle_name, &property_handle_default_value, ZEND_ACC_PUBLIC, NULL);
-	zend_string_release(property_handle_name);
+    // @see php-8.3.8/ext/oci8/oci8_arginfo.h: register_class_OCILob()
+    zend_string *attribute_name_AllowDynamicProperties = zend_string_init_interned("AllowDynamicProperties", sizeof("AllowDynamicProperties") - 1, 1);
+    zend_add_class_attribute(class_entry, attribute_name_AllowDynamicProperties, 0);
+    zend_string_release(attribute_name_AllowDynamicProperties);
 
 	return class_entry;
 }

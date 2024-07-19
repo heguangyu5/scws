@@ -183,6 +183,7 @@ struct php_scws
 };
 
 #if (PHP_MAJOR_VERSION == 8 && PHP_MINOR_VERSION > 0) || (PHP_MAJOR_VERSION > 8)
+#include "zend_attributes.h"
 #include "scws_arginfo.h"
 #else
 zend_function_entry ext_functions[] = {
@@ -272,13 +273,10 @@ PHP_INI_END()
 
 PHP_MINIT_FUNCTION(scws)
 {
-	zend_class_entry scws_class_entry;
-	
 	REGISTER_INI_ENTRIES();
 
 	le_scws = zend_register_list_destructors_ex(php_scws_dtor, NULL, PHP_SCWS_OBJECT_TAG, module_number);
-	INIT_CLASS_ENTRY(scws_class_entry, "SimpleCWS", class_SimpleCWS_methods);
-	scws_class_entry_ptr = zend_register_internal_class(&scws_class_entry TSRMLS_CC);
+	scws_class_entry_ptr = register_class_SimpleCWS();
 
 	REGISTER_LONG_CONSTANT("SCWS_XDICT_XDB",	SCWS_XDICT_XDB, CONST_CS|CONST_PERSISTENT);
 	REGISTER_LONG_CONSTANT("SCWS_XDICT_MEM",	SCWS_XDICT_MEM, CONST_CS|CONST_PERSISTENT);
